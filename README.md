@@ -43,7 +43,7 @@ Unfortunately time is limited and thefore I hope that others join the developmen
 Additional features might be:
 * Enable conversion from timetable.html downloaded in English language
 * Convert the script into a web application (e.g. Rails), where users just have to input the URL
-* Add additional event to the calendar e.g. exams, semester dates....
+* Add additional events to the calendar e.g. exams, semester dates....
 
 ##Bugs
 Please use the 'Issues' functionality on github to report any kind of bugs
