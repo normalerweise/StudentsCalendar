@@ -2,7 +2,7 @@ StudentsCalendar
 ================
 
 Students Calendar is dedicated to all students of Mannheim University, who want to use their
-personal lecture timetable on their favorite mobile device or calendar app (Apple iCal, Mozilla Thunderbird, Microsift Outlook...)
+personal lecture timetable on their favorite mobile device or calendar app (Apple iCal, Mozilla Thunderbird, Microsift Outlook...).
 
 It is a small ruby program to convert the personal timetable you maintained in the students portal 
 to an iCalendar (.ics) file. This file can be imported as an additional calendar on most mobile devices or calendar apps.
@@ -12,10 +12,10 @@ Please note: StudentsCalendar is rather new and I encourage you to double check 
 ##Prerequisites
 As StudentsCalendar is written in ruby you need a working ruby environment (check whether 'ruby --version' succeeds).
 Additionally the following gems should be installed:
-*ri_cal
-*tzinfo
-*activesupport
-*nokogiri
+* ri_cal
+* tzinfo
+* activesupport
+* nokogiri
 
 
 ##How to use
@@ -28,8 +28,8 @@ Additionally the following gems should be installed:
 1. Save the displayed website as 'timetable.html'
 1. Download 'students_calendar.rb'
 1. Open you favorite terminal and execute
-   'ruby students_calendar.rb <path_to_timetable_html> <path_to_new_ics_file>
-   e.g. 'ruby students_calendar.rb /Users/example/Desktop/timetable.html /Users/example/Desktop/timetable.ics
+   `ruby students_calendar.rb <path_to_timetable_html> <path_to_new_ics_file>`
+   e.g. `ruby students_calendar.rb /Users/example/Desktop/timetable.html /Users/example/Desktop/timetable.ics`
 
 
 ##Limitations
@@ -42,7 +42,7 @@ I have several ideas for addiational features that might be useful.
 Unfortunately time is limited and thefore I hope that others join the development.
 Additional features might be:
 * Enable conversion from timetable.html downloaded in English language
-* Convert the script into a webaplication (e.g. Rails), where users just have to input the url
+* Convert the script into a web application (e.g. Rails), where users just have to input the URL
 * Add additional event to the calendar e.g. exams, semester dates....
 
 ##Bugs
