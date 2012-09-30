@@ -10,12 +10,14 @@ to an iCalendar (.ics) file. This file can be imported as an additional calendar
 Please note: StudentsCalendar is rather new and I encourage you to double check imported dates and times. Don't blame me if   you miss your lectures :-)
 
 ##Prerequisites
-As StudentsCalendar is written in ruby you need a working ruby environment (check whether 'ruby --version' succeeds).
+As StudentsCalendar is written in ruby you need a working ruby 1.9.X environment (check whether 'ruby --version' returns something like 'ruby 1.9....').
 Additionally the following gems should be installed:
 * ri_cal
 * tzinfo
 * activesupport
 * nokogiri
+
+use `gem install <gem_name>` to install.
 
 
 ##How to use
