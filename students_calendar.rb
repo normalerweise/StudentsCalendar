@@ -21,7 +21,18 @@ class CourseParser
   
   def initialize(html_table_element)
     @html_table_element = html_table_element
-    @notiz_str = notiz_str_from html_table_element 
+    @notiz_str = notiz_str_from html_table_element
+    check_html_table_element 
+  end
+  
+  def check_html_table_element
+    # Check credibility of html_table_element
+    # is it a course <table> element?
+    
+    # a regular course has 8 or 9 elements
+    if (no_of_elements = @html_table_element.elements.size) > 10
+      raise CourseParserException, "<table> contains too much sub elements: #{no_of_elements}"
+    end
   end
   
   def self.potential_courses_from(source)
@@ -48,9 +59,12 @@ class CourseParser
     # The tite of a tag is contained in an anchor tag 
     # surrounded by a table data tag having css class 'klein'
     title = @html_table_element.css('td.klein a')
-    if title.length == 1
-      return title[0].content.strip
-    end 
+    return title[0].content.strip if title.length == 1
+    
+    # or in awkward cases surrounded by a table data tag having css class 'plan5'
+    title = @html_table_element.css('td.plan5 a')
+    return title[0].content.strip if title.length == 1
+     
     raise CourseParserException, 'Unable to parse title'
   end
 
@@ -210,7 +224,8 @@ class Timetable
           event.dtend(course.first_event_end_time)
           event.location(course.location)
           event.description("Lecturer: #{course.lecturer}\nFaculty: #{course.faculty}")
-          event.rrule_property(build_recurrence_rule(course))
+          rrule = build_recurrence_rule(course)
+          event.rrule_property(rrule) unless rrule.nil?
           event.alarm do |alarm|
             alarm.trigger = "-PT15M"
             alarm.action = 'AUDIO'
@@ -225,13 +240,17 @@ class Timetable
   private
   
   def build_recurrence_rule(course)
-    
-    raise "unknown interval: #{course.interval} " if course.interval != 'wtl'
-    
-    rule = RiCal::PropertyValue::RecurrenceRule.new(nil, {})
-    rule.freq = 'WEEKLY'
-    rule.until = course.last_event_end_time
-    rule
+    case course.interval 
+    when 'wtl'
+      rule = RiCal::PropertyValue::RecurrenceRule.new(nil, {})
+      rule.freq = 'WEEKLY'
+      rule.until = course.last_event_end_time
+      return rule
+    when 'Einzel'
+      return nil # No rule required for single events
+    else
+      raise "unknown interval: #{course.interval}"
+    end
   end
   
 end
