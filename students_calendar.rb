@@ -58,13 +58,12 @@ class CourseParser
   def title
     # The tite of a tag is contained in an anchor tag 
     # surrounded by a table data tag having css class 'klein'
-    title = @html_table_element.css('td.klein a')
-    return title[0].content.strip if title.length == 1
-    
-    # or in awkward cases surrounded by a table data tag having css class 'plan5'
-    title = @html_table_element.css('td.plan5 a')
-    return title[0].content.strip if title.length == 1
-     
+    # or in awkward cases surrounded by a table data tag having css class 'plan<number>'
+    # Try several versions:
+    ['td.klein a', 'td.plan5 a', 'td.plan6 a' ].each do |css_selector|
+      title = @html_table_element.css(css_selector)
+      return title[0].content.strip if title.length == 1
+    end
     raise CourseParserException, 'Unable to parse title'
   end
 
@@ -103,7 +102,7 @@ class CourseParser
   end
 
   def interval
-    @notiz_str.match(/\d{2}:\d{2} - \d{2}:\d{2}, (\w*)/) do |m|
+    @notiz_str.match(/\d{2}:\d{2} - \d{2}:\d{2}, (\d{1,2}-[\wäöü]*|\w*)/) do |m|
       return m[1]
     end
     raise CourseParserException, 'Unable to parse interval'
@@ -157,6 +156,7 @@ class Course
         courses << Course.parse_from(potential_course)
       rescue CourseParserException => e
         puts "Warning: Skipped unparseable table element: #{e.message}"
+        #puts "Content: #{potential_course.to_s}"
       end
     end
     courses
@@ -239,12 +239,20 @@ class Timetable
   
   private
   
+  def weekly_recurrence_rule_until_end(course)
+    rule = RiCal::PropertyValue::RecurrenceRule.new(nil, {})
+    rule.freq = 'WEEKLY'
+    rule.until = course.last_event_end_time
+    rule
+  end
+  
   def build_recurrence_rule(course)
     case course.interval 
     when 'wtl'
-      rule = RiCal::PropertyValue::RecurrenceRule.new(nil, {})
-      rule.freq = 'WEEKLY'
-      rule.until = course.last_event_end_time
+      return weekly_recurrence_rule_until_end(course)
+    when '14-täglich'
+      rule = weekly_recurrence_rule_until_end(course)
+      rule.interval = 2
       return rule
     when 'Einzel'
       return nil # No rule required for single events
